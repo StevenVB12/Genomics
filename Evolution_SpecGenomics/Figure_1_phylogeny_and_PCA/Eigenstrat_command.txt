@@ -1,0 +1,24 @@
+# check https://github.com/simonhmartin/genomics_general for filetering scripts
+
+# run thindist
+python filterGenotypes.py -t 12 -i Herato_040518.HeratoALL.calls.gz --thinDist 1000 | \
+gzip > Herato_040518.HeratoALL.thindist1000.calls.gz
+
+# genotypes to eigenstrat input
+python filterGenotypes.py -i Herato_040518.HeratoALL.thindist1000.calls.gz -of diplo --podSize 1000 | \
+python genoToEigenstrat.py -f diplo \
+--genoOutFile Herato_040518.HeratoALL.thindist1000.geno \
+--snpOutFile Herato_040518.HeratoALL.thindist1000.snp \
+--cumulativePos
+
+# run smartpca
+smartpca.perl \
+-i Herato_040518.HeratoALL.thindist1000.geno \
+-a Herato_040518.HeratoALL.thindist1000.snp \
+-b Herato_040518.HeratoALL.thindist1000.txt \
+-p Herato_040518.HeratoALL.thindist1000.PCA.plot \
+-l Herato_040518.HeratoALL.thindist1000.log \
+-o Herato_040518.HeratoALL.thindist1000.PCA.comp.out \
+-e Herato_040518.HeratoALL.thindist1000.PCA.eigen.out
+
+

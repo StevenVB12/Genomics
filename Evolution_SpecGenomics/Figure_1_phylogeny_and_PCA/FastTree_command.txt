@@ -1,0 +1,6 @@
+# check https://github.com/simonhmartin/genomics_general for filetering scripts
+
+python filterGenotypes.py -i Herato_040518.HeratoALL.calls.gz -of diplo --podSize 1000 | \
+python genoToSeq.py > Herato_040518.Herato.filtered_TREE.fasta
+
+FastTreeMP -fastest -nt Herato_040518.Herato.filtered_TREE.fasta > Herato_040518.Herato.filtered_TREE.tre
