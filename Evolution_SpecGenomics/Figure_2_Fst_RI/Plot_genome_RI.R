@@ -76,6 +76,7 @@ CYR_VEN <- read.table("Fst_stats/cyr_ven.stats",h=T)
 CYRN_VEN <- read.table("Fst_stats/cyrN-ven.stats", h=T)
 ETY_HIMem <- read.table("Fst_stats/ety-himEM.stats",h=T)
 cyrN_emmFAV <- read.table("Fst_stats/cyr-emmHIM.stats",h=T)
+lat_ety <- read.table("Fst_stats/lat_ety.stats",h=T)
 head(CYR_VEN)
 
 LAT_NOT <- merge(LAT_NOT,scaf_coords2,by="scaffold", all.x=TRUE)
@@ -94,7 +95,7 @@ CYR_VEN <- merge(CYR_VEN,scaf_coords2,by="scaffold", all.x=TRUE)
 CYRN_VEN <- merge(CYRN_VEN,scaf_coords2,by="scaffold", all.x=TRUE)
 ETY_HIMem <- merge(ETY_HIMem,scaf_coords2,by="scaffold", all.x=TRUE)
 cyrN_emmFAV <- merge(cyrN_emmFAV,scaf_coords2,by="scaffold", all.x=TRUE)
-
+lat_ety <- merge(lat_ety,scaf_coords2,by="scaffold", all.x=TRUE)
 
 LAT_NOT <- cbind(LAT_NOT,chromPos=LAT_NOT$position+LAT_NOT$scafStart+LAT_NOT$chromStart-2)
 ETY_NOT <- cbind(ETY_NOT,chromPos=ETY_NOT$position+ETY_NOT$scafStart+ETY_NOT$chromStart-2)
@@ -112,7 +113,7 @@ CYR_VEN <- cbind(CYR_VEN,chromPos=CYR_VEN$position+CYR_VEN$scafStart+CYR_VEN$chr
 CYRN_VEN <- cbind(CYRN_VEN,chromPos=CYRN_VEN$position+CYRN_VEN$scafStart+CYRN_VEN$chromStart-2)
 ETY_HIMem <- cbind(ETY_HIMem,chromPos=ETY_HIMem$position+ETY_HIMem$scafStart+ETY_HIMem$chromStart-2)
 cyrN_emmFAV <- cbind(cyrN_emmFAV,chromPos=cyrN_emmFAV$position+cyrN_emmFAV$scafStart+cyrN_emmFAV$chromStart-2)
-
+lat_ety <- cbind(lat_ety,chromPos=lat_ety$position+lat_ety$scafStart+lat_ety$chromStart-2)
 
 comp=list(LAT_NOT,ETY_NOT,ERA_HYDfg,AMA_HYDfg,AMA_ERA,EMM_FAVem,DEM_HYDp,HIM_CYR,EMM_HIM,FAV_HIM,VEN_CHE,PHY_FAVem,CYR_VEN,CYRN_VEN,ETY_HIMem,cyrN_emmFAV)
 names=c("LAT_NOT","ETY_NOT","ERA_HYDfg","AMA_HYDfg","AMA_ERA","EMM_FAV","DEM_HYDp","HIM_CYR","EMM_HIM","FAV_HIM","VEN_CHE","PHY_FAVem","CYR_VEN","CYRN_VEN","ETY_HIMem"," cyrN_emmFAV")
@@ -240,8 +241,8 @@ jack <- function(stat, w){
 
 # block jackknife
 
-comp=list(DEM_HYDp,ERA_HYDfg,AMA_ERA,AMA_HYDfg,ETY_NOT,LAT_NOT,EMM_FAVem,FAV_HIM,EMM_HIM,VEN_CHE,HIM_CYR,CYRN_VEN,ETY_HIMem)
-names=c("DEM_HYDp","ERA_HYDfg","AMA_ERA","AMA_HYDfg","ETY_NOT","LAT_NOT","EMM_FAVem","FAV_HIM","EMM_HIM","VEN_CHE","HIM_CYR","CyrN_VEN","ETY_HIMem")
+comp=list(DEM_HYDp,ERA_HYDfg,AMA_ERA,AMA_HYDfg,ETY_NOT,LAT_NOT,EMM_FAVem,FAV_HIM,EMM_HIM,VEN_CHE,HIM_CYR,CYRN_VEN,ETY_HIMem,lat_ety)
+names=c("DEM_HYDp","ERA_HYDfg","AMA_ERA","AMA_HYDfg","ETY_NOT","LAT_NOT","EMM_FAVem","FAV_HIM","EMM_HIM","VEN_CHE","HIM_CYR","CyrN_VEN","ETY_HIMem","lat_ety")
 
 w <- 100
 
@@ -292,12 +293,13 @@ colnames(blockJ) <- c('pop','FstJ','FstJerr','Fstsd','dXYJ','dXYJerr','dXYsd','d
                       'FstJZ','FstJerrZ','FstsdZ','dXYJZ','dXYJerrZ','dXYsdZ','daJZ','daJerrZ','dasdZ')
 
 blockJ <- subset(blockJ, blockJ$pop != 'CyrN_VEN')
+names=c("DEM_HYDp","ERA_HYDfg","AMA_ERA","AMA_HYDfg","ETY_NOT","LAT_NOT","EMM_FAVem","FAV_HIM","EMM_HIM","VEN_CHE","HIM_CYR","CyrN_VEN","ETY_HIMem","lat_ety")
 
 # RI <- c(0.11, 0.22, 0.11, 0.22, 0.22, 0.22, 0.33, 0.5, 0.5, 0.89, 0.67, 0.44, 0.5)
-RI <- c(0.0002, 0.51, 0.04, 0.04, 0.44, 0.44, 0.61, (0.672+0.804)/2, (0.5226+0.7041)/2, 0.9068, 0.804, (0.5226+0.7041)/2)
+RI <- c(0.0002, 0.5113, 0.04, 0.04, 0.4369, 0.4369, 0.606, (0.7087+0.8039)/2, (0.5719+0.7041)/2, 0.9068, 0.8039, (0.5719+0.7041)/2, 0.23)
 
-RI1 <- c(0.0002, 0.51, 0.04, 0.04, 0.44, 0.44, 0.61, (0.672), (0.5226), 0.9068, 0.804, (0.5226))
-RI2 <- c(0.0002, 0.51, 0.04, 0.04, 0.44, 0.44, 0.61, (0.804), (0.7041), 0.9068, 0.804, (0.7041))
+RI1 <- c(0.0002, 0.5113, 0.04, 0.04, 0.4369, 0.4369, 0.606, (0.7087), (0.5719), 0.9068, 0.8039, (0.5719), 0.23)
+RI2 <- c(0.0002, 0.5113, 0.04, 0.04, 0.4369, 0.4369, 0.606, (0.8039), (0.7041), 0.9068, 0.8039, (0.7041), 0.23)
 
 blockJ <- cbind(blockJ, RI, RI1, RI2)
 
