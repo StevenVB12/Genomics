@@ -1,0 +1,14 @@
+
+
+module load seq-seq-pan/current
+seq-seq-pan map -c SeqSeqPan_erato_melp_char_consensus.fasta -p ./ -n mask_1_start_pan -i mask_1_start.txt &
+seq-seq-pan map -c SeqSeqPan_erato_melp_char_consensus.fasta -p ./ -n mask_1_end_pan -i mask_1_end.txt &
+
+seq-seq-pan map -c SeqSeqPan_erato_melp_char_consensus.fasta -p ./ -n mask_2_start_pan -i mask_2_start.txt &
+seq-seq-pan map -c SeqSeqPan_erato_melp_char_consensus.fasta -p ./ -n mask_2_end_pan -i mask_2_end.txt &
+
+seq-seq-pan map -c SeqSeqPan_erato_melp_char_consensus.fasta -p ./ -n mask_3_start_pan -i mask_3_start.txt &
+seq-seq-pan map -c SeqSeqPan_erato_melp_char_consensus.fasta -p ./ -n mask_3_end_pan -i mask_3_end.txt &
+
+seq-seq-pan map -c SeqSeqPan_erato_melp_char_consensus.fasta -p ./ -n mask_4_start_pan -i mask_4_start.txt &
+seq-seq-pan map -c SeqSeqPan_erato_melp_char_consensus.fasta -p ./ -n mask_4_end_pan -i mask_4_end.txt &
