@@ -1,0 +1,118 @@
+# bin in 50bp windows
+nohup bedtools makewindows -g ~/share/REF/H_erato_dem/Herato_final.fasta.sizes -w 30 | bedtools map -a - -b bg/brain_H_e_dem_normalized_mean.bg -c 4 -o mean > bg/brain_H_e_dem_normalized_mean.w30s0bin.bg &
+nohup bedtools makewindows -g ~/share/REF/H_charithonia_PR/Hcha.assembly.v1.1.fasta.sizes -w 30 | bedtools map -a - -b bg/brain_H_cha1_normalized_mean.bg -c 4 -o mean > bg/brain_H_cha1_normalized_mean.w30s0bin.bg &
+nohup bedtools makewindows -g ~/share/REF/H_charithonia_PR/H_charithonia_10X.2.fasta.sizes -w 30 | bedtools map -a - -b bg/brain_H_cha2_normalized_mean.bg -c 4 -o mean > bg/brain_H_cha2_normalized_mean.w30s0bin.bg &
+nohup bedtools makewindows -g ~/share/REF/Hmel2/Hmel2.fa.sizes -w 30 | bedtools map -a - -b bg/brain_H_m_ros_normalized_mean.bg -c 4 -o mean > bg/brain_H_m_ros_normalized_mean.w30s0bin.bg &
+
+# modify bedgraph to genome positions
+nohup python se-seq-pan_bedgraph_chrompos.py -I bg/brain_H_e_dem_normalized_mean.w30s0bin.bg -g 1 -p genome_pos_H_e_dem.txt -o bg/start_end/brain_H_e_dem_normalized_mean &
+nohup python se-seq-pan_bedgraph_chrompos.py -I bg/brain_H_cha1_normalized_mean.w30s0bin.bg -g 2 -p genome_pos_H_cha1.txt -o bg/start_end/brain_H_cha1_normalized_mean &
+nohup python se-seq-pan_bedgraph_chrompos.py -I bg/brain_H_cha2_normalized_mean.w30s0bin.bg -g 3 -p genome_pos_H_cha2.txt -o bg/start_end/brain_H_cha2_normalized_mean &
+nohup python se-seq-pan_bedgraph_chrompos.py -I bg/brain_H_m_ros_normalized_mean.w30s0bin.bg -g 4 -p genome_pos_H_m_melp.txt -o bg/start_end/brain_H_m_ros_normalized_mean &
+
+sort -u bg/start_end/brain_H_e_dem_normalized_mean_start.txt | wc -l &
+sort -u bg/start_end/brain_H_cha1_normalized_mean_start.txt | wc -l &
+sort -u bg/start_end/brain_H_cha2_normalized_mean_start.txt | wc -l &
+sort -u bg/start_end/brain_H_m_ros_normalized_mean_start.txt | wc -l &
+
+sort -u bg/start_end/brain_H_e_dem_normalized_mean_end.txt | wc -l &
+sort -u bg/start_end/brain_H_cha1_normalized_mean_end.txt | wc -l &
+sort -u bg/start_end/brain_H_cha2_normalized_mean_end.txt | wc -l &
+sort -u bg/start_end/brain_H_m_ros_normalized_mean_end.txt | wc -l &
+
+# remove first line
+sed -i -n -e '2,$p' bg/start_end/brain_H_e_dem_normalized_mean_start.txt &
+sed -i -n -e '2,$p' bg/start_end/brain_H_e_dem_normalized_mean_end.txt &
+
+sed -i -n -e '2,$p' bg/start_end/brain_H_cha1_normalized_mean_start.txt &
+sed -i -n -e '2,$p' bg/start_end/brain_H_cha1_normalized_mean_end.txt &
+
+sed -i -n -e '2,$p' bg/start_end/brain_H_cha2_normalized_mean_start.txt &
+sed -i -n -e '2,$p' bg/start_end/brain_H_cha2_normalized_mean_end.txt &
+
+sed -i -n -e '2,$p' bg/start_end/brain_H_m_ros_normalized_mean_start.txt &
+sed -i -n -e '2,$p' bg/start_end/brain_H_m_ros_normalized_mean_end.txt &
+
+# split files
+mkdir bg/start_end/split
+split -l 100000 -a 3 -d bg/start_end/brain_H_e_dem_normalized_mean_start.txt bg/start_end/split/brain_H_e_dem_normalized_mean_start_
+split -l 100000 -a 3 -d bg/start_end/brain_H_e_dem_normalized_mean_end.txt bg/start_end/split/brain_H_e_dem_normalized_mean_end_
+
+split -l 100000 -a 3 -d bg/start_end/brain_H_cha1_normalized_mean_start.txt bg/start_end/split/brain_H_cha1_normalized_mean_start_
+split -l 100000 -a 3 -d bg/start_end/brain_H_cha1_normalized_mean_end.txt bg/start_end/split/brain_H_cha1_normalized_mean_end_
+
+split -l 100000 -a 3 -d bg/start_end/brain_H_cha2_normalized_mean_start.txt bg/start_end/split/brain_H_cha2_normalized_mean_start_
+split -l 100000 -a 3 -d bg/start_end/brain_H_cha2_normalized_mean_end.txt bg/start_end/split/brain_H_cha2_normalized_mean_end_
+
+split -l 100000 -a 3 -d bg/start_end/brain_H_m_ros_normalized_mean_start.txt bg/start_end/split/brain_H_m_ros_normalized_mean_start_
+split -l 100000 -a 3 -d bg/start_end/brain_H_m_ros_normalized_mean_end.txt bg/start_end/split/brain_H_m_ros_normalized_mean_end_
+
+
+# map
+
+# combine files
+tail -n +2 bg/start_end/split/brain_H_e_dem_normalized_mean_start_pan_*.txt | grep -v '==>' | grep . | cut -d$'\t' -f 2 > bg/start_end/brain_H_e_dem_normalized_mean_start_pan.txt 
+tail -n +2 bg/start_end/split/brain_H_e_dem_normalized_mean_end_pan_*.txt | grep -v '==>' | grep . | cut -d$'\t' -f 2 > bg/start_end/brain_H_e_dem_normalized_mean_end_pan.txt
+
+tail -n +2 bg/start_end/split/brain_H_cha1_normalized_mean_start_pan_*.txt | grep -v '==>' | grep . | cut -d$'\t' -f 2 > bg/start_end/brain_H_cha1_normalized_mean_start_pan.txt
+tail -n +2 bg/start_end/split/brain_H_cha1_normalized_mean_end_pan_*.txt | grep -v '==>' | grep . | cut -d$'\t' -f 2 > bg/start_end/brain_H_cha1_normalized_mean_end_pan.txt
+
+tail -n +2 bg/start_end/split/brain_H_cha2_normalized_mean_start_pan_*.txt | grep -v '==>' | grep . | cut -d$'\t' -f 2 > bg/start_end/brain_H_cha2_normalized_mean_start_pan.txt
+tail -n +2 bg/start_end/split/brain_H_cha2_normalized_mean_end_pan_*.txt | grep -v '==>' | grep . | cut -d$'\t' -f 2 > bg/start_end/brain_H_cha2_normalized_mean_end_pan.txt
+
+tail -n +2 bg/start_end/split/brain_H_m_ros_normalized_mean_start_pan_*.txt | grep -v '==>' | grep . | cut -d$'\t' -f 2 > bg/start_end/brain_H_m_ros_normalized_mean_start_pan.txt
+tail -n +2 bg/start_end/split/brain_H_m_ros_normalized_mean_end_pan_*.txt | grep -v '==>' | grep . | cut -d$'\t' -f 2 > bg/start_end/brain_H_m_ros_normalized_mean_end_pan.txt
+
+#combine
+lineN=$(< bg/start_end/brain_H_e_dem_normalized_mean_start_pan.txt wc -l)
+pr -mts <(yes "pan" | head -n $lineN) bg/start_end/brain_H_e_dem_normalized_mean_start_pan.txt bg/start_end/brain_H_e_dem_normalized_mean_end_pan.txt <(cut -d$'\t' -f 4 bg/brain_H_e_dem_normalized_mean.w30s0bin.bg) > bg/start_end/brain_H_e_dem_normalized_mean_start_end_pan.bg
+
+lineN=$(< bg/start_end/brain_H_cha1_normalized_mean_start_pan.txt wc -l)
+pr -mts <(yes "pan" | head -n $lineN) bg/start_end/brain_H_cha1_normalized_mean_start_pan.txt bg/start_end/brain_H_cha1_normalized_mean_end_pan.txt <(cut -d$'\t' -f 4 bg/brain_H_cha1_normalized_mean.w30s0bin.bg) > bg/start_end/brain_H_cha1_normalized_mean_start_end_pan.bg
+
+lineN=$(< bg/start_end/brain_H_cha2_normalized_mean_start_pan.txt wc -l)
+pr -mts <(yes "pan" | head -n $lineN) bg/start_end/brain_H_cha2_normalized_mean_start_pan.txt bg/start_end/brain_H_cha2_normalized_mean_end_pan.txt <(cut -d$'\t' -f 4 bg/brain_H_cha2_normalized_mean.w30s0bin.bg) > bg/start_end/brain_H_cha2_normalized_mean_start_end_pan.bg
+
+lineN=$(< bg/start_end/brain_H_m_ros_normalized_mean_start_pan.txt wc -l)
+pr -mts <(yes "pan" | head -n $lineN) bg/start_end/brain_H_m_ros_normalized_mean_start_pan.txt bg/start_end/brain_H_m_ros_normalized_mean_end_pan.txt <(cut -d$'\t' -f 4 bg/brain_H_m_ros_normalized_mean.w30s0bin.bg) > bg/start_end/brain_H_m_ros_normalized_mean_start_end_pan.bg
+
+
+# sort rows
+lineN=$(< bg/start_end/brain_H_e_dem_normalized_mean_start_pan.txt wc -l)
+pr -mts <(yes "pan" | head -n $lineN) <(awk ' {split( $0, a, " " ); asort( a ); for( i = 1; i <= length(a); i++ ) printf( "%s\t", a[i] ); printf( "\n" ); }' <(cut -d$'\t' -f 2,3 bg/start_end/brain_H_e_dem_normalized_mean_start_end_pan.bg)) > bg/start_end/brain_H_e_dem_normalized_mean_start_end_pan.rowsort.bg
+sed -i 's/[[:space:]]*$//' bg/start_end/brain_H_e_dem_normalized_mean_start_end_pan.rowsort.bg
+
+lineN=$(< bg/start_end/brain_H_cha1_normalized_mean_start_pan.txt wc -l)
+pr -mts <(yes "pan" | head -n $lineN) <(awk ' {split( $0, a, " " ); asort( a ); for( i = 1; i <= length(a); i++ ) printf( "%s\t", a[i] ); printf( "\n" ); }' <(cut -d$'\t' -f 2,3 bg/start_end/brain_H_cha1_normalized_mean_start_end_pan.bg)) > bg/start_end/brain_H_cha1_normalized_mean_start_end_pan.rowsort.bg
+sed -i 's/[[:space:]]*$//' bg/start_end/brain_H_cha1_normalized_mean_start_end_pan.rowsort.bg
+
+lineN=$(< bg/start_end/brain_H_cha2_normalized_mean_start_pan.txt wc -l)
+pr -mts <(yes "pan" | head -n $lineN) <(awk ' {split( $0, a, " " ); asort( a ); for( i = 1; i <= length(a); i++ ) printf( "%s\t", a[i] ); printf( "\n" ); }' <(cut -d$'\t' -f 2,3 bg/start_end/brain_H_cha2_normalized_mean_start_end_pan.bg)) > bg/start_end/brain_H_cha2_normalized_mean_start_end_pan.rowsort.bg
+sed -i 's/[[:space:]]*$//' bg/start_end/brain_H_cha2_normalized_mean_start_end_pan.rowsort.bg
+
+lineN=$(< bg/start_end/brain_H_m_ros_normalized_mean_start_pan.txt wc -l)
+pr -mts <(yes "pan" | head -n $lineN) <(awk ' {split( $0, a, " " ); asort( a ); for( i = 1; i <= length(a); i++ ) printf( "%s\t", a[i] ); printf( "\n" ); }' <(cut -d$'\t' -f 2,3 bg/start_end/brain_H_m_ros_normalized_mean_start_end_pan.bg)) > bg/start_end/brain_H_m_ros_normalized_mean_start_end_pan.rowsort.bg
+sed -i 's/[[:space:]]*$//' bg/start_end/brain_H_m_ros_normalized_mean_start_end_pan.rowsort.bg
+
+pr -mts bg/start_end/brain_H_e_dem_normalized_mean_start_end_pan.rowsort.bg <(cut -d$'\t' -f 4 bg/brain_H_e_dem_normalized_mean.w30s0bin.bg) > bg/start_end/brain_H_e_dem_normalized_mean_start_end_pan.rowsort.cov.bg &
+pr -mts bg/start_end/brain_H_cha1_normalized_mean_start_end_pan.rowsort.bg <(cut -d$'\t' -f 4 bg/brain_H_cha1_normalized_mean.w30s0bin.bg) > bg/start_end/brain_H_cha1_normalized_mean_start_end_pan.rowsort.cov.bg &
+pr -mts bg/start_end/brain_H_cha2_normalized_mean_start_end_pan.rowsort.bg <(cut -d$'\t' -f 4 bg/brain_H_cha2_normalized_mean.w30s0bin.bg) > bg/start_end/brain_H_cha2_normalized_mean_start_end_pan.rowsort.cov.bg &
+pr -mts bg/start_end/brain_H_m_ros_normalized_mean_start_end_pan.rowsort.bg <(cut -d$'\t' -f 4 bg/brain_H_m_ros_normalized_mean.w30s0bin.bg) > bg/start_end/brain_H_m_ros_normalized_mean_start_end_pan.rowsort.cov.bg &
+
+# clean
+awk '{ if ($2 < $3 && $3-$2 < 10000 && $2!=$3) print $0}' bg/start_end/brain_H_e_dem_normalized_mean_start_end_pan.rowsort.cov.bg | sort -g -k2,2 > bg/start_end/brain_H_e_dem_normalized_mean_start_end_pan.rowsort.clean.bg &
+awk '{ if ($2 < $3 && $3-$2 < 10000 && $2!=$3) print $0}' bg/start_end/brain_H_cha1_normalized_mean_start_end_pan.rowsort.cov.bg | sort -g -k2,2 > bg/start_end/brain_H_cha1_normalized_mean_start_end_pan.rowsort.clean.bg &
+awk '{ if ($2 < $3 && $3-$2 < 10000 && $2!=$3) print $0}' bg/start_end/brain_H_cha2_normalized_mean_start_end_pan.rowsort.cov.bg | sort -g -k2,2 > bg/start_end/brain_H_cha2_normalized_mean_start_end_pan.rowsort.clean.bg &
+awk '{ if ($2 < $3 && $3-$2 < 10000 && $2!=$3) print $0}' bg/start_end/brain_H_m_ros_normalized_mean_start_end_pan.rowsort.cov.bg | sort -g -k2,2 > bg/start_end/brain_H_m_ros_normalized_mean_start_end_pan.rowsort.clean.bg &
+
+grep -v '\.$' bg/start_end/brain_H_e_dem_normalized_mean_start_end_pan.rowsort.clean.bg  | bedtools merge -c 4 -d -2 -o mean > bg/start_end/brain_H_e_dem_normalized_mean_start_end_pan.rowsort.clean.nodot.bg &
+grep -v '\.$' bg/start_end/brain_H_cha1_normalized_mean_start_end_pan.rowsort.clean.bg  | bedtools merge -c 4 -d -2 -o mean > bg/start_end/brain_H_cha1_normalized_mean_start_end_pan.rowsort.clean.nodot.bg &
+grep -v '\.$' bg/start_end/brain_H_cha2_normalized_mean_start_end_pan.rowsort.clean.bg  | bedtools merge -c 4 -d -2 -o mean > bg/start_end/brain_H_cha2_normalized_mean_start_end_pan.rowsort.clean.nodot.bg &
+grep -v '\.$' bg/start_end/brain_H_m_ros_normalized_mean_start_end_pan.rowsort.clean.bg  | bedtools merge -c 4 -d -2 -o mean > bg/start_end/brain_H_m_ros_normalized_mean_start_end_pan.rowsort.clean.nodot.bg &
+
+
+# bedgraph to bigwig
+/work/rpapa/sbelleghem/scripts/bedGraphToBigWig bg/start_end/brain_H_e_dem_normalized_mean_start_end_pan.rowsort.clean.nodot.bg /work/rpapa/share/SVB_Maylin/SeqSeqPan_erato_melp_char/pan_sizes.txt bg/start_end/brain_H_e_dem_normalized_mean_start_end_pan.rowsort.clean.bw &
+/work/rpapa/sbelleghem/scripts/bedGraphToBigWig bg/start_end/brain_H_cha1_normalized_mean_start_end_pan.rowsort.clean.nodot.bg /work/rpapa/share/SVB_Maylin/SeqSeqPan_erato_melp_char/pan_sizes.txt bg/start_end/brain_H_cha1_normalized_mean_start_end_pan.rowsort.clean.bw &
+/work/rpapa/sbelleghem/scripts/bedGraphToBigWig bg/start_end/brain_H_cha2_normalized_mean_start_end_pan.rowsort.clean.nodot.bg /work/rpapa/share/SVB_Maylin/SeqSeqPan_erato_melp_char/pan_sizes.txt bg/start_end/brain_H_cha2_normalized_mean_start_end_pan.rowsort.clean.bw &
+/work/rpapa/sbelleghem/scripts/bedGraphToBigWig bg/start_end/brain_H_m_ros_normalized_mean_start_end_pan.rowsort.clean.nodot.bg /work/rpapa/share/SVB_Maylin/SeqSeqPan_erato_melp_char/pan_sizes.txt bg/start_end/brain_H_m_ros_normalized_mean_start_end_pan.rowsort.clean.bw &
