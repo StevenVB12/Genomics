@@ -1,4 +1,0 @@
-/work/rpapa/share/REF/H_erato_dem/Herato_final.fasta
-/work/rpapa/share/REF/H_charithonia_PR/Hcha.assembly.v1.1.fasta
-/work/rpapa/share/REF/H_charithonia_PR/H_charithonia_10X.2.fasta
-/work/rpapa/share/REF/Hmel2/Hmel2.fa
