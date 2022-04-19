@@ -1,0 +1,1 @@
+perl -pe 'chomp if /^[ATCGNSBDHVMRWYKatcgnsbdhvmrwyk-]/' SeqSeqPan_erato_melp_char.xmfa | sed 's/\=/\n\=/g' | sed 's/>/\n>/g' | sed '/^$/d'  > SeqSeqPan_erato_melp_char_noNewline.xmfa
