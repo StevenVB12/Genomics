@@ -7,4 +7,4 @@ Van Belleghem SM, Cole JM, Montejo‐Kovacevich G, Bacquet CN, McMillan WO, Papa
 
 [PAN_SV_chromatin_Genomics](https://github.com/StevenVB12/Genomics/tree/master/PAN_SV_chromatin_Genomics):
 
-Ruggieri AA, LivraghiL, Lewis JJ, Evans E, Cicconardi F, Hebberecht L, Montgomery S, Ghezzi A, Rodriguez-Martinez JA, Jiggins CD, McMillan WO, Counterman BA, Papa R & Van Belleghem SM (2022) A butterfly pan-genome reveals a large amount of structural variation underlies the evolution of chromatin accessibility. BioRxiv.
+Ruggieri AA, LivraghiL, Lewis JJ, Evans E, Cicconardi F, Hebberecht L, Montgomery S, Ghezzi A, Rodriguez-Martinez JA, Jiggins CD, McMillan WO, Counterman BA, Papa R & Van Belleghem SM (2022) A butterfly pan-genome reveals a large amount of structural variation underlies the evolution of chromatin accessibility. Genome Research 32: 1862-1875.
